@@ -1,0 +1,93 @@
+/* CSS declarations go here */
+body {
+	/* Safari 4-5, Chrome 1-9 */
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#1a82f7), to(#2F2727));
+
+	/* Safari 5.1, Chrome 10+ */
+	background: -webkit-linear-gradient(top, #2F2727, #1a82f7);
+
+	/* Firefox 3.6+ */
+	background: -moz-linear-gradient(top, #2F2727, #1a82f7);
+
+	/* IE 10 */
+	background: -ms-linear-gradient(top, #2F2727, #1a82f7);
+
+	/* Opera 11.10+ */
+	background: -o-linear-gradient(top, #2F2727, #1a82f7);
+	
+	font-family: Arial, Helvetica, sans-serif;
+}
+html {
+	height: 100%;
+}
+.button {
+	font-weight: bold;
+	padding: 10px 40px;
+	margin: 5px;
+	border-radius: 15px;
+	display: inline-block;
+	text-align: center;
+	font-family: "Arial Black", Gadget, sans-serif;
+}
+.banner {
+	font-weight: bold;
+	padding: 10px 40px; 
+	border-radius: 15px;
+	text-align: center;
+	font-family: "Arial Black", Gadget, sans-serif;
+	font-size: 250%;
+}
+.black {
+	background: #252525;
+}
+.pure-black {
+	background: #000000;
+}
+.gray {
+	background: #35383f;
+}
+.white {
+	background: #ececec;
+}
+.pure-white {
+	background: #ffffff;
+}
+.blue {
+	background: #1c487f;
+}
+.yellow {
+	background: #f9cf27;
+}
+.orange {
+	background: #ed822c;
+}
+.red {
+	background: #960013;
+}
+.green {
+	background: #366c3c;
+}
+.pink {
+	background: #ea687e;
+}
+.clear {
+    background: transparent;
+}
+.white-on {
+	color: #eee;
+}
+.pure-white-on {
+	color: #ffffff;
+}
+.black-on {
+	color: #444;
+}
+.pure-black-on {
+	color: #000000;
+}
+.centered {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}

@@ -1,0 +1,44 @@
+<head>
+    <title>S430</title>
+</head>
+
+<body>
+    <div class="banner">
+        <div class="white-on red button" id="winner">
+            Won: <div class="black-on yellow button">{{queue.previous.won}}</div>
+            Lost: <div class="white-on black button">{{queue.previous.lost}}</div>
+        </div>
+    </div>
+    <div class="banner">
+        <div class="white-on black button">Now:
+            <div {{winner.blue}} id="blue">{{queue.now.blue}}</div>
+            vs
+            <div {{winner.green}} id="green">{{queue.now.green}}</div>
+            <div {{master}} id="time">{{time}}</div>
+        </div>
+    </div>
+    {{#if tallScreen}}
+        <img src="/images/welcome.png" class="centered">
+    {{/if}}
+    <div class="banner">
+        <div class="white-on black button" id="next">Next:
+            <div class="white-on blue button">{{queue.next.blue}}</div>
+            vs
+            <div class="white-on green button">{{queue.next.green}}</div>
+        </div>
+    </div>
+    <div class="banner">
+        <div class="white-on black button">Then:
+            <div class="white-on blue button">{{queue.then.blue}}</div>
+            vs
+            <div class="white-on green button">{{queue.then.green}}</div>
+        </div>
+    </div>
+    <div class="banner">
+        <div class="white-on black button">Later:
+            <div class="white-on blue button">{{queue.later.blue}}</div>
+            vs
+            <div class="white-on green button">{{queue.later.green}}</div>
+        </div>
+    </div>
+</body>
