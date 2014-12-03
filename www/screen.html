@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Scoreing System</title>
+		<link rel="stylesheet" type="text/css" href="main.css">
+	</head>
+	<body>
+		<div class="banner">
+			<div class="white-on red button" id="previous-red">AAAAAA:000</div>
+			<div class="white-on blue button" id="previous-blue">AAAAAA:000</div>
+		</div>
+		<div class="banner">
+			<div class="orange button" id="red-ready">
+				<div class="white-on red button" id="now-red">AAAAAA</div>
+			</div>
+			<div class="black button" id="blue-ready">
+				<div class="white-on blue button" id="now-blue">AAAAAA</div>
+			</div>
+			<div class="black-on white button" id="time" id="time">-0:00</div>
+		</div>
+		<div class="banner">
+			<div class="white-on red button" id="next-red">AAAAAA</div>
+			<div class="white-on blue button"  id="next-blue">AAAAAA</div>
+		</div>
+		<hr />
+		<div id="leaderbord">
+			<div class="centered white-on black button">1: AAAAAA
+				<div class="white-on orange button">125</div>
+				<div class="black-on white button">000</div>
+				<div class="black-on white button">000</div>
+				<div class="white-on blue button">5</div>
+			</div>
+		</div>
+		<script>
+			function pad(n, width, z) {
+				z = z || '0';
+				n = n + '';
+				return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+			} // stolen from s.o. user "Pointy"
+			
+			day = prompt('day? (enter 1, 2, or 3)');
+			ticker=0;
+			match=0;
+			if(window.XMLHttpRequest) {
+				// code for IE7+, Firefox, Chrome, Opera, Safari
+				lRequest = new XMLHttpRequest();
+			} else {
+				// code for IE6, IE5
+				lRequest = new ActiveXObject('Microsoft.XMLHTTP');
+			}
+			lRequest.onreadystatechange = function() {
+				if(lRequest.readyState == 4) {
+					if(lRequest.status == 200) {
+						teams = eval ("(" + lRequest.responseText + ")");
+						leaderbord = eval ("(" + lRequest.responseText + ")");
+						leaderbord.sort(function(a,b){
+							if(a.d1score === null) a.d1score = 0;
+							if(a.d2score === null) a.d2score = 0;
+							if(a.d3score === null) a.d3score = 0;
+							aScore = Math.max(a.d1score, a.d2score, a.d3score);
+							
+							if(b.d1score === null) b.d1score = 0;
+							if(b.d2score === null) b.d2score = 0;
+							if(b.d3score === null) b.d3score = 0;
+							bScore = Math.max(b.d1score, b.d2score, b.d3score);
+							
+							return bScore - aScore;
+						});
+						
+						for(var numPosition = 0; numPosition < leaderbord.length ; numPosition++) {
+							for(var numTeam = 0; numTeam < teams.length ; numTeam++) {
+								if(leaderbord[numPosition].name === teams[numTeam].name) {
+									teams[numTeam].rank = numPosition + 1;
+								}
+							}
+						}
+						
+						document.getElementById('leaderbord').innerHTML = '';
+						for(var numTeam = 0; numTeam < teams.length ; numTeam++) {
+							team = teams[numTeam];
+							if(team.d1score === null) team.d1score = 0;
+							if(team.d2score === null) team.d2score = 0;
+							if(team.d3score === null) team.d3score = 0;
+							score = Math.max(team.d1score, team.d2score, team.d3score);
+							table = (day == 1 ? team.d1table :
+									(day == 2 ? team.d2table :
+												team.d3table));
+							
+							ttl   = (day == 1 ? team.d1match :
+									(day == 2 ? team.d2match :
+												team.d3match)) - match;
+												
+							document.getElementById('leaderbord').innerHTML += '<div class="centered white-on black button">' + pad(team.rank,2) + ': ' + pad(team.name,7,'&nbsp;') +
+																			'		<div class="' + (team.d1score == score ? 'white-on orange' : 'black-on white') + ' button">' + pad(team.d1score,3) + '</div>' +
+																			'		<div class="' + (team.d2score == score ? 'white-on orange' : 'black-on white') + ' button">' + pad(team.d2score,3) + '</div>' +
+																			'		<div class="' + (team.d3score == score ? 'white-on orange' : 'black-on white') + ' button">' + pad(team.d3score,3) + '</div>' +
+																			'		<div class="white-on ' + table + ' button">' + (ttl > 0 ? 'IN ' + ttl : ( ttl == 0 ? 'NOW!' : 'DONE')) + '</div>' +
+																			'	</div>';
+						}
+					}
+					setTimeout(function() {
+						lRequest.open('GET', 'teams.php?day=' + day + '&start=' + ticker++, true);
+						lRequest.send();
+					}, 5000);
+				}
+			}
+			lRequest.open('GET', 'teams.php?day=' + day + '&start=' + ticker++, true);
+			lRequest.send();
+			//////////////////////////////////////////////////////////////////////////////////////////////////////
+			if(window.XMLHttpRequest) {
+				// code for IE7+, Firefox, Chrome, Opera, Safari
+				sRequest = new XMLHttpRequest();
+			} else {
+				// code for IE6, IE5
+				sRequest = new ActiveXObject('Microsoft.XMLHTTP');
+			}
+			sRequest.onreadystatechange = function() {
+				if(sRequest.readyState == 4) {
+					if(sRequest.status == 200) {
+						state = eval ("(" + sRequest.responseText + ")");
+						match = state.match
+						document.getElementById('previous-red').innerHTML = state.previous.red;
+						document.getElementById('previous-blue').innerHTML = state.previous.blue;
+						document.getElementById('now-red').innerHTML = state.now.red.name;
+						document.getElementById('red-ready').className = (redReady = state.now.red.ready) ? 'orange button' : 'black button';
+						document.getElementById('now-blue').innerHTML = state.now.blue.name;
+						document.getElementById('blue-ready').className = (blueReady = state.now.blue.ready) ? 'orange button' : 'black button';
+						document.getElementById('next-red').innerHTML = state.next.red;
+						document.getElementById('next-blue').innerHTML = state.next.blue;
+					}
+					setTimeout(function() {
+						sRequest.open('GET', 'state.php?day=' + day, true);
+						sRequest.send();
+					}, 5000);
+				}
+			}
+			
+			sRequest.open('GET', 'state.php?day=' + day, true);
+			sRequest.send();
+			//////////////////////////////////////////////////////////////////////////////////////////////////////
+			clockMatch = 0;
+			time = 0;
+			redReady = false;
+			blueReady = false;
+			function clock() {
+				if(match > clockMatch && redReady && blueReady) {
+					time = 5*60 + 5;
+					clockMatch = match;
+				}
+				
+				if(time < 2*60) {
+					document.getElementById('time').innerHTML = pad(Math.floor(time/60),2) + ':' + pad(time%60,2);
+				} else if(2*60 <= time && time <= 5*60) {
+					document.getElementById('time').innerHTML = pad(Math.floor((time/60)-2),2) + ':' + pad(time%60,2);
+				} else {
+					document.getElementById('time').innerHTML = '&nbsp;-' + (time-5*60) + '-&nbsp;';
+				}
+				
+				if(time > 0) time--; //tick tick
+			}
+			setInterval(clock, 1000)
+		</script>
+	</body>
+</html>
