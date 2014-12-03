@@ -10,13 +10,9 @@
 			<div class="white-on blue button" id="previous-blue">AAAAAA:000</div>
 		</div>
 		<div class="banner">
-			<div class="orange button" id="red-ready">
-				<div class="white-on red button" id="now-red">AAAAAA</div>
-			</div>
-			<div class="black button" id="blue-ready">
-				<div class="white-on blue button" id="now-blue">AAAAAA</div>
-			</div>
-			<div class="black-on white button" id="time" id="time">-0:00</div>
+			<div class="white-on red button" id="now-red">AAAAAA</div>
+			<div class="white-on blue button" id="now-blue">AAAAAA</div>
+			<div class="black-on white button" id="time" id="time">00:00</div>
 		</div>
 		<div class="banner">
 			<div class="white-on red button" id="next-red">AAAAAA</div>
@@ -40,7 +36,6 @@
 			
 			day = prompt('day? (enter 1, 2, or 3)');
 			ticker=0;
-			match=0;
 			if(window.XMLHttpRequest) {
 				// code for IE7+, Firefox, Chrome, Opera, Safari
 				lRequest = new XMLHttpRequest();
@@ -86,15 +81,21 @@
 									(day == 2 ? team.d2table :
 												team.d3table));
 							
-							ttl   = (day == 1 ? team.d1match :
+							match = (day == 1 ? team.d1match :
 									(day == 2 ? team.d2match :
-												team.d3match)) - match;
-												
+												team.d3match));
+							
+							date = new Date();
+							ttl = (Date.parse('T' + match)-Date.parse('T' + pad(date.getHours(),2) + ':' +
+																			pad(date.getMinutes(),2) + ':' +
+																			pad(date.getSeconds(),2) )) / 60000
+							ttl = Math.ceil(ttl);
+							
 							document.getElementById('leaderbord').innerHTML += '<div class="centered white-on black button">' + pad(team.rank,2) + ': ' + pad(team.name,7,'&nbsp;') +
 																			'		<div class="' + (team.d1score == score ? 'white-on orange' : 'black-on white') + ' button">' + pad(team.d1score,3) + '</div>' +
 																			'		<div class="' + (team.d2score == score ? 'white-on orange' : 'black-on white') + ' button">' + pad(team.d2score,3) + '</div>' +
 																			'		<div class="' + (team.d3score == score ? 'white-on orange' : 'black-on white') + ' button">' + pad(team.d3score,3) + '</div>' +
-																			'		<div class="white-on ' + table + ' button">' + (ttl > 0 ? 'IN ' + ttl : ( ttl == 0 ? 'NOW!' : 'DONE')) + '</div>' +
+																			'		<div class="white-on ' + table + ' button">' + (ttl > 0 ? 'AT ' + (match.substring(0,2)%12 == 0 ? 12 : pad(match.substring(0,2)%12,2)) + match.substring(2,5) : ( ttl > -5 ? '--NOW!--' : '--DONE--')) + '</div>' +
 																			'	</div>';
 						}
 					}
@@ -118,13 +119,10 @@
 				if(sRequest.readyState == 4) {
 					if(sRequest.status == 200) {
 						state = eval ("(" + sRequest.responseText + ")");
-						match = state.match
 						document.getElementById('previous-red').innerHTML = state.previous.red;
 						document.getElementById('previous-blue').innerHTML = state.previous.blue;
-						document.getElementById('now-red').innerHTML = state.now.red.name;
-						document.getElementById('red-ready').className = (redReady = state.now.red.ready) ? 'orange button' : 'black button';
-						document.getElementById('now-blue').innerHTML = state.now.blue.name;
-						document.getElementById('blue-ready').className = (blueReady = state.now.blue.ready) ? 'orange button' : 'black button';
+						document.getElementById('now-red').innerHTML = state.now.red;
+						document.getElementById('now-blue').innerHTML = state.now.blue;
 						document.getElementById('next-red').innerHTML = state.next.red;
 						document.getElementById('next-blue').innerHTML = state.next.blue;
 					}
@@ -138,27 +136,11 @@
 			sRequest.open('GET', 'state.php?day=' + day, true);
 			sRequest.send();
 			//////////////////////////////////////////////////////////////////////////////////////////////////////
-			clockMatch = 0;
-			time = 0;
-			redReady = false;
-			blueReady = false;
 			function clock() {
-				if(match > clockMatch && redReady && blueReady) {
-					time = 5*60 + 5;
-					clockMatch = match;
-				}
-				
-				if(time < 2*60) {
-					document.getElementById('time').innerHTML = pad(Math.floor(time/60),2) + ':' + pad(time%60,2);
-				} else if(2*60 <= time && time <= 5*60) {
-					document.getElementById('time').innerHTML = pad(Math.floor((time/60)-2),2) + ':' + pad(time%60,2);
-				} else {
-					document.getElementById('time').innerHTML = '&nbsp;-' + (time-5*60) + '-&nbsp;';
-				}
-				
-				if(time > 0) time--; //tick tick
+				date = new Date();
+				document.getElementById('time').innerHTML = pad((date.getHours()%12) == 0 ? 12 : (date.getHours()%12), 2) + ':' + pad(date.getMinutes(),2);
 			}
-			setInterval(clock, 1000)
+			setInterval(clock, 5000)
 		</script>
 	</body>
 </html>

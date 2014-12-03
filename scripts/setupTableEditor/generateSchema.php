@@ -33,7 +33,7 @@
 			db0('INSERT INTO pages (name, weight, query, prow, ptable) VALUES(?, ?, ?, ?, ?)',
 									$humanName,
 									$tableWeight,
-									'SELECT ' . $csvColumnNames . ' FROM ' . $tableName . ' ORDER BY ' $columnNames[0],
+									'SELECT ' . $csvColumnNames . ' FROM ' . $tableName . ' ORDER BY ' . $columnNames[0],
 									0, // this is an assumption that column 1 is unique
 									$tableName);
 			

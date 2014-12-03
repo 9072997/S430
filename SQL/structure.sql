@@ -22,19 +22,16 @@ CREATE TYPE tablecolor AS ENUM (
 CREATE TABLE teams (
 	id SERIAL PRIMARY KEY,
 	name VARCHAR(255) UNIQUE,
-	d1match INT,
+	d1match TIME,
 	d1table tablecolor,
 	d1score INT,
-	d1ready BOOLEAN NOT NULL DEFAULT FALSE,
 	UNIQUE (d1match, d1table),
-	d2match INT,
+	d2match TIME,
 	d2table tablecolor,
 	d2score INT,
-	d2ready BOOLEAN NOT NULL DEFAULT FALSE,
 	UNIQUE (d2match, d2table),
-	d3match INT,
+	d3match TIME,
 	d3table tablecolor,
 	d3score INT,
-	d3ready BOOLEAN NOT NULL DEFAULT FALSE,
 	UNIQUE (d3match, d3table)
 );

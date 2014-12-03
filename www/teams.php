@@ -1,5 +1,6 @@
 <?php
 	require_once(dirname(__FILE__) . '/../includes/db.inc.php');
+	header('Content-Type: application/json');
 	$day = ((abs(intval($_GET['day']))+1)%5)-1; // sanitize day = 1,2,3
 	$teams = db('SELECT * FROM teams');
 	usort($teams, function($a, $b) use ($day) {
@@ -13,9 +14,9 @@
 		}
 		
 		$matchprop = 'd' . $day . 'match';
-		if($a->$matchprop < $b->$matchprop) {
+		if(preg_replace("/[^0-9]/", "", $a->$matchprop) < preg_replace("/[^0-9]/", "", $b->$matchprop)) {
 			$score -= 2;
-		} elseif($a->$matchprop > $b->$matchprop) {
+		} elseif(preg_replace("/[^0-9]/", "", $a->$matchprop) > preg_replace("/[^0-9]/", "", $b->$matchprop)) {
 			$score += 2;
 		}
 		
